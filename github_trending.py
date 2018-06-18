@@ -3,24 +3,30 @@ import datetime as dt
 
 
 def get_trending_repositories(top_size):
-    search_date = str(dt.date.today() - dt.timedelta(days=1))
+    search_date = str(dt.date.today() - dt.timedelta(weeks=1))
+    print(search_date)
     search_params = {
-        'q': 'created: >' + search_date,
-        'sort': 'star',
-        'order': 'desc'
+        'q': 'created>{}'.format(search_date),
+        'sort': 'stars'
     }
-    repos = requests.get(
+    top_repos = requests.get(
         'https://api.github.com/search/repositories',
         params=search_params
-    ).json()
-    return repos
+    ).json()['items']
+    return top_repos
 
 
 def get_open_issues_amount(repo_owner, repo_name):
-    pass
+    url = 'https://api.github.com/repos/{}/{}/issues'.format(
+        repo_owner,
+        repo_name
+    )
+    return requests.get(url).json
 
 
 if __name__ == '__main__':
     top_size = 20
-    print(get_trending_repositories(top_size))
-    print(str(dt.date.today() - dt.timedelta(weeks=1)))
+    top_repos = get_trending_repositories(top_size)
+    for repo in top_repos:
+        print(repo['full_name'])
+
