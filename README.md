@@ -7,7 +7,7 @@ Script can help to find top-20 repos, created at this week.
 Install dependencies:
 
 ```cmd
-C:\GIT\9_github_trending\>python -m pip install requirements.txt
+C:\>python -m pip install requirements.txt
 ```
 
 # How to use
