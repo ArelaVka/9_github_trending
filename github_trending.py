@@ -1,6 +1,7 @@
 import requests
 import datetime as dt
 import sys
+import json
 
 
 def get_trending_repositories(top_size):
@@ -21,7 +22,11 @@ def get_open_issues_amount(repo_owner, repo_name):
         repo_owner,
         repo_name
     )
-    return requests.get(url).json()
+    open_issues = requests.get(url).json()
+    if open_issues == []:
+        return False
+    else:
+        return open_issues
 
 
 if __name__ == '__main__':
@@ -37,25 +42,11 @@ if __name__ == '__main__':
                 repo_url)
         )
         issues = get_open_issues_amount(repo_owner, repo_name)
-        print('-Issues url of repo:')
-        for issue in issues:
-            if issue == 'message':
-                sys.exit('Aborted: You have API rate limit exceeded!')
-            else:
-                if bool(issue):
-                #print('issue:', issue)
-                    print('type:', type(issue))
-                    print('issue-html:', issue['html_url'])
-                    print('type html:', type(issue['html_url']))
-                else:
-                    print('NICHEGO!!!!!!!')
-            # if str(issue).count('API rate limit excSeeded') > 0:
-            #     print('You have API rate limit exceeded')
-            #     break
-            # else:
-            #     if bool(issue != []):
-            #         print(issue['html_url'])
-            #     else:
-            #         print('Not found any issues')
-            #         break
-
+        if issues:
+            print('-Issues url of repo:')
+            for issue in issues:
+                if issue == 'message':
+                    sys.exit('Aborted: You have API rate limit exceeded!')
+                print('issue-html:', issue['html_url'])
+        else:
+            print('No issue was found!')
