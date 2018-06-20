@@ -39,7 +39,7 @@ def print_repos_issue(issues):
         print('-Issues url of repo:')
         for issue in issues:
             if issue == 'message':
-                sys.exit('Aborted: You have API rate limit exceeded!')
+                print('You have API rate limit exceeded!')
             print('issue-html:', issue['html_url'])
     else:
         print('No issue was found!')
