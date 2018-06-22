@@ -1,10 +1,9 @@
 import requests
 import datetime as dt
-import sys
 
 
-def get_trending_repositories(top_size):
-    search_date = str(dt.date.today() - dt.timedelta(weeks=1))
+def get_trending_repositories(top_size, days=dt.timedelta(days=7)):
+    search_date = str(dt.date.today() - days)
     search_params = {
         'q': 'created:>' + search_date,
         'sort': 'stars'
@@ -24,7 +23,7 @@ def get_open_issues_amount(repo):
         repo_name
     )
     open_issues = requests.get(url).json()
-    if not(open_issues == []):
+    if open_issues:
         return open_issues
 
 
@@ -38,16 +37,15 @@ def print_repos_issue(issues):
     if issues:
         print('-Issues url of repo:')
         for issue in issues:
-            if issue == 'message':
-                print('You have API rate limit exceeded!')
-            print('issue-html:', issue['html_url'])
+            print('issue-html: {}'.format(issue['html_url']))
     else:
         print('No issue was found!')
 
 
 if __name__ == '__main__':
     top_size = 20
-    top_repos = get_trending_repositories(top_size)
+    days = dt.timedelta(days=7)
+    top_repos = get_trending_repositories(top_size, days)
     for repo in top_repos:
         print_repos_info(repo)
         issues = get_open_issues_amount(repo)
